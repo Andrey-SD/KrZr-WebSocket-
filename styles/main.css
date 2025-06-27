@@ -1,0 +1,23 @@
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#canvas {
+  aspect-ratio: 1/1;
+  border: 1px solid black;
+}
+
+@media (orientation: landscape) {
+  #canvas {
+    height: 50%;
+  }
+}
+
+@media (orientation: portrait) {
+  #canvas {
+    width: 50%;
+  }
+}
