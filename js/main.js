@@ -2,12 +2,14 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
 const canvasWidth = canvasHeight = 640;
 const cellSize = canvasWidth / 3;
-
+let playerRound = true;
 const imgCross = new Image(cellSize, cellSize);
 imgCross.src = "img/cross.png";
 
 const imgZero = new Image(cellSize, cellSize);
-imgZero.src = "img/zero.png"
+imgZero.src = "img/zero.png";
+
+const fieldArray = [[], [], []];
 
 
 // imgCross.onload = () => {
@@ -49,8 +51,28 @@ function clickDetecter(event) {
   const col = Math.floor(x / offsetCellSize);
   const y = event.offsetY;
   const row = Math.floor(y / offsetCellSize);
-  drawPLayer(col, row, 1);
+  if (fieldArray[row][col] == undefined) {
+    drawPLayer(col, row, playerRound);
+    fieldArray[row][col] = playerRound;
+    playerRound = !playerRound;
+    console.log(fieldArray);
+    validate();
+  }
 }
+
+function validate() {
+  console.log(fieldArray.length);
+  for (let col = 0; col < fieldArray.length; col++) {
+    for (let row = 0; row < col.length; row++) {
+      console.log(fieldArray[col][row]);
+
+    }
+  }
+}
+
+console.log(false + false + false);
+
+
 
 canvas.addEventListener("click", clickDetecter);
 
