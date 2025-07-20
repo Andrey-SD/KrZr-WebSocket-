@@ -11,7 +11,6 @@ imgZero.src = "img/zero.png";
 
 const fieldArray = [[], [], []];
 
-
 // imgCross.onload = () => {
 //   drawPLayer(0, 0, 1);
 // };
@@ -52,6 +51,7 @@ function clickDetecter(event) {
   const y = event.offsetY;
   const row = Math.floor(y / offsetCellSize);
   if (fieldArray[row][col] == undefined) {
+    sendData(col, row, playerRound);
     drawPLayer(col, row, playerRound);
     fieldArray[row][col] = playerRound;
     playerRound = !playerRound;
@@ -102,16 +102,45 @@ function checkWinner() {
     return fieldArray[0][2];
   }
 
-  // Если победителя нет
   return null;
 }
 
 function showWinner(player) {
   canvas.removeEventListener("click", clickDetecter);
-  alert(`${player} перемогли!!!`);
+  setTimeout(() => {
+    alert(`${player} перемогли!!!`);
+  }, 500);
 }
+
 
 canvas.addEventListener("click", clickDetecter);
 
 drawField();
 
+logMessage('Подключение...');
+
+const ws = new WebSocket('wss://' + '59607a3f-c6dd-4a1b-b2ea-fcc758dcc262-00-2kc9wngu53vue.kirk.replit.dev');
+if (ws && ws.readyState === WebSocket.OPEN) ws.close();
+ws.onopen = () => logMessage('Успешно подключено!');
+
+ws.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  console.log(data);
+};
+
+ws.onerror = () => logMessage('Ошибка подключения.');
+ws.onclose = () => logMessage('Соединение закрыто.');
+
+function logMessage(str) {
+  console.log(str);
+}
+
+function sendData(col, row, playerRound) {
+  const obj = {
+    "col": col,
+    "row": row,
+    "player": playerRound
+  };
+
+  ws.send(JSON.stringify(obj));
+};
