@@ -55,25 +55,63 @@ function clickDetecter(event) {
     drawPLayer(col, row, playerRound);
     fieldArray[row][col] = playerRound;
     playerRound = !playerRound;
-    console.log(fieldArray);
-    validate();
-  }
-}
-
-function validate() {
-  console.log(fieldArray.length);
-  for (let col = 0; col < fieldArray.length; col++) {
-    for (let row = 0; row < col.length; row++) {
-      console.log(fieldArray[col][row]);
-
+    if (checkWinner() == true) {
+      showWinner("Хрести");
+    } else if (checkWinner() == false) {
+      showWinner("Нолики");
     }
   }
 }
 
-console.log(false + false + false);
+function checkWinner() {
+  const size = 3;
 
+  // Проверка строк
+  for (let row = 0; row < size; row++) {
+    if (
+      fieldArray[row][0] === fieldArray[row][1] &&
+      fieldArray[row][0] === fieldArray[row][2]
+    ) {
+      return fieldArray[row][0];
+    }
+  }
 
+  // Проверка столбцов
+  for (let col = 0; col < size; col++) {
+    if (
+      fieldArray[0][col] === fieldArray[1][col] &&
+      fieldArray[0][col] === fieldArray[2][col]
+    ) {
+      return fieldArray[0][col];
+    }
+  }
+
+  // Проверка главной диагоналі
+  if (
+    fieldArray[0][0] === fieldArray[1][1] &&
+    fieldArray[0][0] === fieldArray[2][2]
+  ) {
+    return fieldArray[0][0];
+  }
+
+  // Проверка побочной диагоналі
+  if (
+    fieldArray[0][2] === fieldArray[1][1] &&
+    fieldArray[0][2] === fieldArray[2][0]
+  ) {
+    return fieldArray[0][2];
+  }
+
+  // Если победителя нет
+  return null;
+}
+
+function showWinner(player) {
+  canvas.removeEventListener("click", clickDetecter);
+  alert(`${player} перемогли!!!`);
+}
 
 canvas.addEventListener("click", clickDetecter);
 
 drawField();
+
